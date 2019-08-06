@@ -1,0 +1,26 @@
+{
+    "name": "watch-deep",
+    "version": "0.1.0",
+    "description": "Observe changes in objects, arrays, maps or sets with proxies",
+    "main": "lib",
+    "types": "lib",
+    "scripts": {
+        "prepare": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/janispritzkau/watch-deep.git"
+    },
+    "keywords": [
+        "watch",
+        "proxy",
+        "observe",
+        "deep",
+        "object"
+    ],
+    "author": "Janis Pritzkau <janispritzkau@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "typescript": "^3.5.3"
+    }
+}

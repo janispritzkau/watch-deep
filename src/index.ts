@@ -5,17 +5,31 @@ export interface WatchOptions {
     immediate?: boolean
 }
 
-export function watch<T extends object>(target: T, callback: (target: any) => void, options: WatchOptions = {}): T {
-    if (Object(target) !== target) return target
-    if (options.deep == null) options.deep = true
 
-    for (const key in target) {
-        (<any>target)[key] = watch((<any>target)[key], callback, options)
+export function watch<T extends object>(target: T, callback: (target: any) => void, options: WatchOptions = {}) {
+    options = { deep: true, ...options }
+
+    // Not a 100% sure if this causes a memory leak
+    const proxyMap = new WeakMap<object, object>()
+
+    const proxy = deepWatch(target, callback, options.deep!, proxyMap)
+    if (options.immediate) callback(target)
+
+    return proxy
+}
+
+function deepWatch<T extends object>(target: T, callback: (target: any) => void, deep: boolean, proxyMap: WeakMap<object, object>): T {
+    if (Object(target) !== target) return target
+
+    if (proxyMap.has(target)) return target
+
+    for (const key of Object.keys(target)) {
+        (<any>target)[key] = deepWatch((<any>target)[key], callback, deep, proxyMap)
     }
 
     const watchValue = (value: object) => {
-        if (options.deep) {
-            return watch(value, callback, options)
+        if (deep) {
+            return deepWatch(value, callback, deep, proxyMap)
         } else {
             return value
         }
@@ -52,7 +66,7 @@ export function watch<T extends object>(target: T, callback: (target: any) => vo
         }
     })
 
-    if (options.immediate) callback(target)
+    proxyMap.set(proxy, target)
 
     return proxy
 }

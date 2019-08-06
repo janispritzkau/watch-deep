@@ -1,6 +1,6 @@
 # watch-deep
 
-Tiny libray to watch deep changes in objects, arrays with support for ES6 `Map` and `Set`.
+A small library to watch deep changes in objects, arrays with support for ES6 `Map` and `Set`.
 
 ```js
 import { watch } from "./src"
@@ -15,11 +15,17 @@ obj.map.set(1, { a: [] })
 obj.map.get(1).a.push(2)
 delete obj.map
 
-const b = { c: 3 }
-obj.b = b
+const a = { b: 123 }
+obj.a = a
 // This won't be detected because the object must first be proxied and then
 // retrieved from the object tree to observe changes.
-b.c = 999
+a.b = 999
+
+// Also keep in mind that proxied objects that have been deleted from the
+// object tree will also trigger a change.
+const b = obj.a
+delete obj.a
+b.a = 1
 ```
 
 Be careful with circular references since those will cause a stack overflow.

@@ -1,6 +1,6 @@
 {
     "name": "watch-deep",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Observe changes in objects, arrays, maps or sets with proxies",
     "main": "lib",
     "types": "lib",
